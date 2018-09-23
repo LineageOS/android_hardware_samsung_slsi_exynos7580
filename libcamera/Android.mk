@@ -72,7 +72,7 @@ LOCAL_C_INCLUDES += \
 	$(TOP)/hardware/samsung_slsi/$(TARGET_SOC)/include \
 	$(TOP)/hardware/samsung_slsi/$(TARGET_BOARD_PLATFORM)/include \
 	$(TOP)/hardware/samsung_slsi/$(TARGET_BOARD_PLATFORM)/libcamera \
-	$(TOP)/hardware/samsung_slsi/exynos7570/libcamera \
+	$(TOP)/hardware/samsung_slsi/exynos7580/libcamera \
 	$(TOP)/hardware/libhardware_legacy/include/hardware_legacy \
 	$(TOP)/vendor/samsung/feature/CscFeature/libsecnativefeature \
 	$(TOP)/bionic \
