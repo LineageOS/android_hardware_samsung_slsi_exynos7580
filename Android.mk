@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+ifeq ($(TARGET_BOARD_PLATFORM), exynos5)
+ifeq ($(TARGET_SLSI_VARIANT), bsp)
 ifeq ($(TARGET_SOC), exynos7580)
 exynos7580_dirs := \
 	libgatekeeper \
@@ -34,4 +36,6 @@ endif
 
 include $(call all-named-subdir-makefiles,$(exynos7580_dirs))
 
+endif
+endif
 endif
