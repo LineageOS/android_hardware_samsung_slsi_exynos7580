@@ -250,7 +250,7 @@ void ExynosPrimaryDisplay::dump_win_config(struct decon_win_config *config)
         } else {
             ALOGE("Win[%d]: %s,(%d,%d,%d), F(%d) P(%d)"
                 " A(%d), %s, %s, fmt(%d) Src(%d,%d,%d,%d,f_w=%d,f_h=%d) ->"
-                " Dst(%d,%d,%d,%d,f_w=%d,f_h=%d) T(%d,%d,%d,%d) B(%d,%d,%d,%d)\n",
+                " Dst(%d,%d,%d,%d,f_w=%d,f_h=%d) T(%d,%d,%d,%d)\n",
                 win, state[cfg->state], cfg->fd_idma[0],
                 cfg->fd_idma[1], cfg->fd_idma[2],
                 cfg->fence_fd, cfg->protection,
@@ -261,9 +261,7 @@ void ExynosPrimaryDisplay::dump_win_config(struct decon_win_config *config)
                 cfg->dst.x, cfg->dst.y, cfg->dst.x + cfg->dst.w, cfg->dst.y + cfg->dst.h,
                 cfg->dst.f_w, cfg->dst.f_h,
                 cfg->transparent_area.x, cfg->transparent_area.y,
-                cfg->transparent_area.w, cfg->transparent_area.h,
-                cfg->covered_opaque_area.x, cfg->covered_opaque_area.y,
-                cfg->covered_opaque_area.w, cfg->covered_opaque_area.h);
+                cfg->transparent_area.w, cfg->transparent_area.h);
         }
     }
 }
@@ -428,7 +426,7 @@ int ExynosPrimaryDisplay::handleWindowUpdate(hwc_display_contents_1_t __unused *
         (config[winUpdateInfoIdx].dst.w != (uint32_t)mXres) || (config[winUpdateInfoIdx].dst.h != (uint32_t)mXres)) {
         for (size_t i = 0; i < NUM_HW_WINDOWS; i++) {
             memset(&config[i].transparent_area, 0, sizeof(config[i].transparent_area));
-            memset(&config[i].covered_opaque_area, 0, sizeof(config[i].covered_opaque_area));
+            //memset(&config[i].covered_opaque_area, 0, sizeof(config[i].covered_opaque_area));
         }
     }
 
