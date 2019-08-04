@@ -18,6 +18,7 @@ ifeq ($(TARGET_BOARD_PLATFORM), exynos5)
 ifeq ($(TARGET_SLSI_VARIANT), bsp)
 ifeq ($(TARGET_SOC), exynos7580)
 exynos7580_dirs := \
+	mobicore \
 	libgatekeeper \
 	libkeymaster \
 
