@@ -11,7 +11,7 @@ LOCAL_JNI_SHARED_LIBRARIES := libcommonpawrapper
 LOCAL_PRIVATE_PLATFORM_APIS := true
 
 LOCAL_PACKAGE_NAME := RootPA
-LOCAL_MODULE_TAGS := eng optional
+LOCAL_MODULE_TAGS := optional
 LOCAL_CERTIFICATE := platform
 
 LOCAL_PROGUARD_FLAGS := -include $(LOCAL_PATH)/proguard-project.txt
