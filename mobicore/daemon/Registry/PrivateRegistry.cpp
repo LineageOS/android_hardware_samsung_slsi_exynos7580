@@ -72,6 +72,7 @@
 
 #define MC_REGISTRY_CONTAINER_PATH "/data/app/mcRegistry"
 #define MC_REGISTRY_DEFAULT_PATH "/system/app/mcRegistry"
+#define MC_REGISTRY_VENDOR_PATH "/vendor/app/mcRegistry"
 #define MC_REGISTRY_FALLBACK_PATH "/data/app/mcRegistry"
 #define AUTH_TOKEN_FILE_NAME "00000000.authtokcont"
 #define ENV_MC_AUTH_TOKEN_PATH "MC_AUTH_TOKEN_PATH"
@@ -138,8 +139,12 @@ string getTlRegistryPath()
     if (doesDirExist(MC_REGISTRY_DEFAULT_PATH)) {
         registryPath = MC_REGISTRY_DEFAULT_PATH;
         LOG_I(" Using MC_REGISTRY_PATH %s", registryPath.c_str());
+    } else if (doesDirExist(MC_REGISTRY_VENDOR_PATH)) {
+        // Second, attempt to use regular registry environment variable.
+        registryPath = MC_REGISTRY_VENDOR_PATH;
+        LOG_I(" Using MC_REGISTRY_VENDOR_PATH %s", registryPath.c_str());
     } else if (doesDirExist(MC_REGISTRY_FALLBACK_PATH)) {
-        // Second, attempt to use fallback registry environment variable.
+        // Third, attempt to use fallback registry environment variable.
         registryPath = MC_REGISTRY_FALLBACK_PATH;
         LOG_I(" Using MC_REGISTRY_FALLBACK_PATH %s", registryPath.c_str());
     }
