@@ -1,33 +1,33 @@
 /*
- * Copyright (c) 2013 TRUSTONIC LIMITED
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the TRUSTONIC LIMITED nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+Copyright  © Trustonic Limited 2013
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this 
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice, 
+     this list of conditions and the following disclaimer in the documentation 
+     and/or other materials provided with the distribution.
+
+  3. Neither the name of the Trustonic Limited nor the names of its contributors 
+     may be used to endorse or promote products derived from this software 
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 #include <string.h>
 #include <stdlib.h>
@@ -58,7 +58,7 @@ rootpaerror_t openCmtlSession()
     {
         closeCmtlSession();
     }
-
+    
     handle_=tltChannelOpen(sizeOfCmp(), &error);
     if(NULL==handle_)
     {
@@ -70,20 +70,19 @@ rootpaerror_t openCmtlSession()
         {
             ret=ROOTPA_ERROR_MOBICORE_CONNECTION;
         }
-    }
+    }    
     return ret;
 }
 
 rootpaerror_t executeOneCmpCommand(CMTHANDLE handle, CmpMessage* commandP, CmpMessage* responseP);
 
 rootpaerror_t executeContentManagementCommands(int numberOfCommands, CmpMessage* commandsP, CmpMessage* responsesP, uint32_t* internalError)
-{
+{    
+    LOGD(">>executeContentManagementCommands");
     rootpaerror_t ret=ROOTPA_OK ;
     rootpaerror_t iRet=ROOTPA_OK ;
     bool selfOpened=false;
-    CMTHANDLE handle;
-    LOGD(">>executeContentManagementCommands");
-
+    
     *internalError=0;
 
     if(handle_==NULL)
@@ -94,8 +93,8 @@ rootpaerror_t executeContentManagementCommands(int numberOfCommands, CmpMessage*
         ret=openCmtlSession();
         selfOpened=true;
     }
-    handle=handle_;
-
+    CMTHANDLE handle=handle_; 
+    
     if (handle)
     {
         int i;
@@ -103,7 +102,7 @@ rootpaerror_t executeContentManagementCommands(int numberOfCommands, CmpMessage*
         {
             responsesP[i].hdr.id=commandsP[i].hdr.id; // match the id;
             responsesP[i].hdr.ignoreError=commandsP[i].hdr.ignoreError;
-
+            
             if(commandsP[i].length>0)
             {
                 if(((iRet=executeOneCmpCommand(handle, &commandsP[i], &responsesP[i]))!=ROOTPA_OK))
@@ -114,7 +113,7 @@ rootpaerror_t executeContentManagementCommands(int numberOfCommands, CmpMessage*
                     {
                         responsesP[i].hdr.ret=ret;
                     }
-
+                    
                     if(commandsP[i].hdr.ignoreError==false)
                     {
                         LOGE("executeContentManagementCommands, ignoreError==false, returning %d", ret);
@@ -125,7 +124,7 @@ rootpaerror_t executeContentManagementCommands(int numberOfCommands, CmpMessage*
             else
             {
                 LOGE("executeContentManagementCommands, empty command");
-            }
+            }            
         }
 
         if(ret!=ROOTPA_OK)
@@ -159,23 +158,19 @@ rootpaerror_t executeContentManagementCommands(int numberOfCommands, CmpMessage*
 */
 rootpaerror_t executeOneCmpCommand(CMTHANDLE handle, CmpMessage* commandP, CmpMessage* responseP)
 {
-    mcResult_t mcRet;
-    cmpCommandId_t commandId;
-    rootpaerror_t ret;
-    uint32_t neededBytes;
     LOGD(">>executeOneCmpCommand");
-    if (unlikely( bad_write_ptr(handle,sizeof(CMTSTRUCT))))
+    if (unlikely( bad_write_ptr(handle,sizeof(CMTSTRUCT)))) 
     {
         return ROOTPA_ERROR_INTERNAL;
     }
-    if(unlikely(commandP->contentP==NULL || commandP->length< sizeof(cmpCommandId_t)))
+    if(unlikely (commandP->contentP==NULL || commandP->length< sizeof(cmpCommandId_t)))
     {
         return ROOTPA_ERROR_INTERNAL;
     }
 
-    mcRet=MC_DRV_OK;
-    commandId=getCmpCommandId(commandP->contentP);
-
+    mcResult_t mcRet=MC_DRV_OK;
+    cmpCommandId_t commandId=getCmpCommandId(commandP->contentP);
+        
     handle->mappedSize=getTotalMappedBufferSize(commandP);
     if(0==handle->mappedSize)
     {
@@ -183,10 +178,10 @@ rootpaerror_t executeOneCmpCommand(CMTHANDLE handle, CmpMessage* commandP, CmpMe
         return ROOTPA_COMMAND_NOT_SUPPORTED;
     }
 
-    ret=ROOTPA_OK;
-    while(true)
+    rootpaerror_t ret=ROOTPA_OK;
+    while(true) 
     {
-        handle->mappedP=(uint8_t*)malloc((size_t) handle->mappedSize);
+        handle->mappedP=malloc((size_t) handle->mappedSize);
         if(NULL==handle->mappedP)
         {
             ret=ROOTPA_ERROR_OUT_OF_MEMORY;
@@ -217,22 +212,22 @@ rootpaerror_t executeOneCmpCommand(CMTHANDLE handle, CmpMessage* commandP, CmpMe
             break;
         }
 
-        neededBytes=getNeededBytesFromResponse(handle->wsmP);
+        uint32_t neededBytes=getNeededBytesFromResponse(handle->wsmP);
 
         if(0==neededBytes)
         {
             break;
         }
 
-        if((uint32_t)-1==neededBytes)
+        if(-1==neededBytes)
         {
-            ret=ROOTPA_ERROR_MOBICORE_CONNECTION;
+            ret=ROOTPA_ERROR_MOBICORE_CONNECTION; 
             break;
         }
 
         if(neededBytes <= handle->mappedSize)
         {
-            LOGE("executeOneCmpCommand, there is something wrong. CMTL is requesting smaller buffer than we originally had. Command: %d, original %d requested %d",
+            LOGE("executeOneCmpCommand, there is something wrong. CMTL is requesting smaller buffer than we originally had. Command: %d, original %d requested %d",  
 	         commandId, handle->mappedSize, neededBytes);
             ret=ROOTPA_ERROR_MOBICORE_CONNECTION;
             break;
@@ -270,10 +265,10 @@ rootpaerror_t executeOneCmpCommand(CMTHANDLE handle, CmpMessage* commandP, CmpMe
         LOGE("executeOneCmpCommand not able to free mapped memory %d", mcRet);
         ret=ROOTPA_ERROR_MOBICORE_CONNECTION;
     }
-    LOGD("freeing mapped memory %ld", (long int) handle->mappedP);
-    free(handle->mappedP);
+    LOGD("freeing mapped memory %ld", (long int) handle->mappedP);    
+    free(handle->mappedP);    
     if(commandP->hdr.ret==ROOTPA_OK) commandP->hdr.ret=ret;
-    if(responseP->hdr.ret==ROOTPA_OK) responseP->hdr.ret=ret;
+    if(responseP->hdr.ret==ROOTPA_OK) responseP->hdr.ret=ret;    
     LOGD("<<executeOneCmpCommand %d %d",commandId, ret);
     return ret;
 }

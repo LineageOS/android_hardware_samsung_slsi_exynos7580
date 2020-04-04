@@ -1,46 +1,39 @@
 /*
- * Copyright (c) 2013 TRUSTONIC LIMITED
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the TRUSTONIC LIMITED nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+Copyright  © Trustonic Limited 2013
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+
+  3. Neither the name of the Trustonic Limited nor the names of its contributors
+     may be used to endorse or promote products derived from this software
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <wrapper.h>
+#include <stdbool.h>
 #include <stdint.h>
-#ifdef TIZEN
-#include <stdarg.h>
-extern int asprintf (char **result, const char *format, ...)
-       __attribute__ ((__format__ (__printf__, 2, 3)));
-extern int vasprintf (char **result, const char *format, va_list args)
-       __attribute__ ((__format__ (__printf__, 2, 0)));
-#endif
 
 #include <libxml/parser.h>
 #include <libxml/valid.h>
@@ -61,7 +54,7 @@ extern int vasprintf (char **result, const char *format, va_list args)
 #define PLATFORM_TYPES_NS_PREFIX "mcpt"
 #define PLATFORM_TYPES_NAMESPACE "http://www.mcore.gi-de.com/2012/02/schema/MCPlatformTypes"
 
-#define XSD_PATH_MAX_LEN 1024
+#define XSD_PATH_MAX_LEN 256
 #define INT_BUFFER_LENGTH 11
 #define UNKNOWN_ID 0xFFFFFFFF
 
@@ -82,6 +75,7 @@ static char enrollmentServiceFullPath_[XSD_PATH_MAX_LEN];
 static char platformTypesFullPath_[XSD_PATH_MAX_LEN];
 static xmlNsPtr nameSpace_=NULL;
 static xmlNsPtr typesNameSpace_=NULL;
+
 // file internal functions
 
 xmlDocPtr createXmlResponse()
@@ -102,10 +96,9 @@ xmlDocPtr createXmlResponse()
 
 bool addTrustletData(xmlNodePtr rootNode, bool tltBin, char* contentP)
 {
-    char* element;
     xmlNodePtr trustletDataNode=xmlNewChild(rootNode, nameSpace_, BAD_CAST "trustletData", NULL);
     if(NULL==trustletDataNode) return false;
-    element ="encryptedKey";
+    char* element="encryptedKey";
     if(tltBin)
     {
         element="tltBin";
@@ -118,63 +111,51 @@ bool addTrustletData(xmlNodePtr rootNode, bool tltBin, char* contentP)
 
 char* errorCodeToString(rootpaerror_t errorCode)
 {
-    char* returnErrorCode = STRING_ROOTPA_ERROR_INTERNAL;
-	
     switch(errorCode)
     {
         case ROOTPA_COMMAND_NOT_SUPPORTED:
-        	returnErrorCode = STRING_ROOTPA_COMMAND_NOT_SUPPORTED;
-            break;
+            return STRING_ROOTPA_COMMAND_NOT_SUPPORTED;
 
         case ROOTPA_ERROR_LOCK:
-        	returnErrorCode =  STRING_ROOTPA_ERROR_LOCK;
-        	break;
+            return STRING_ROOTPA_ERROR_LOCK;
 
 //
 // this is not currently understood by SE
 //
 //        case ROOTPA_ERROR_COMMAND_EXECUTION:
-//            returnErrorCode =   STRING_ROOTPA_ERROR_COMMAND_EXECUTION;
-//        	break;
+//            return STRING_ROOTPA_ERROR_COMMAND_EXECUTION;
 
         case ROOTPA_ERROR_REGISTRY:
-        	returnErrorCode =  STRING_ROOTPA_ERROR_REGISTRY;
-        	break;
+            return STRING_ROOTPA_ERROR_REGISTRY;
 
         case ROOTPA_ERROR_MOBICORE_CONNECTION:
-        	returnErrorCode =  STRING_ROOTPA_ERROR_MOBICORE_CONNECTION;
-        	break;
+            return STRING_ROOTPA_ERROR_MOBICORE_CONNECTION;
 
         case ROOTPA_ERROR_OUT_OF_MEMORY:
-        	returnErrorCode =  STRING_ROOTPA_ERROR_OUT_OF_MEMORY;
-        	break;
+            return STRING_ROOTPA_ERROR_OUT_OF_MEMORY;
 
         case ROOTPA_ERROR_INTERNAL:
-        	returnErrorCode =  STRING_ROOTPA_ERROR_INTERNAL;
-        	break;
+            return STRING_ROOTPA_ERROR_INTERNAL;
 
         case ROOTPA_ERROR_XML:
-        	returnErrorCode =  STRING_ROOTPA_ERROR_XML;
-        	break;
+            return STRING_ROOTPA_ERROR_XML;
 
         case ROOTPA_ERROR_REGISTRY_OBJECT_NOT_AVAILABLE:
-        	returnErrorCode =  STRING_ROOTPA_ERROR_REGISTRY_OBJECT_NOT_AVAILABLE;
-        	break;
+            return STRING_ROOTPA_ERROR_REGISTRY_OBJECT_NOT_AVAILABLE;
+
     }
     LOGD("errorCodeToString: unknown error code %d", errorCode);
-    
-    return returnErrorCode;
+    return STRING_ROOTPA_ERROR_INTERNAL;
 }
 
 bool addCommandResultData(xmlNodePtr resultListNode, int id,  char* commandResultP, rootpaerror_t errorCode, uint32_t errorDetail )
 {
-    bool retValue;
-    char intBuffer[INT_BUFFER_LENGTH];
-
     xmlNodePtr commandResultNode=xmlNewChild(resultListNode, nameSpace_, BAD_CAST "commandResult", NULL);
     if(NULL==commandResultNode) return false;
 
-    retValue=true;
+    bool retValue=true;
+    char intBuffer[INT_BUFFER_LENGTH];
+
     snprintf(intBuffer,INT_BUFFER_LENGTH,"%u",(uint32_t) id);
     if(xmlNewProp(commandResultNode, BAD_CAST "id", BAD_CAST intBuffer)==NULL) return false;
 
@@ -209,13 +190,10 @@ bool addCommandResultData(xmlNodePtr resultListNode, int id,  char* commandResul
 
 xmlNodePtr findFirstCommandNode(xmlDocPtr xmlDocP)
 {
-    xmlNodePtr commandsNodeP;
-    xmlNodePtr rootElementP;
-
-    rootElementP = xmlDocGetRootElement(xmlDocP);
+    xmlNodePtr rootElementP = xmlDocGetRootElement(xmlDocP);
     if(NULL==rootElementP) return NULL;
 
-    commandsNodeP=rootElementP->children;
+    xmlNodePtr commandsNodeP=rootElementP->children;
     for (; commandsNodeP; commandsNodeP = commandsNodeP->next)
     {
         if (commandsNodeP->type == XML_ELEMENT_NODE && strcmp((char*)commandsNodeP->name, "commands")==0)
@@ -229,9 +207,8 @@ xmlNodePtr findFirstCommandNode(xmlDocPtr xmlDocP)
 
 xmlNodePtr getNextCommand(xmlDocPtr xmlDocP, xmlNodePtr prevNode)
 {
-    xmlNodePtr firstNode;
-    xmlNodePtr commandNode;
     LOGD(">> getNextCommand %ld %ld", (long int) xmlDocP, (long int) prevNode);
+    xmlNodePtr firstNode;
     if(NULL==prevNode)
     {
         firstNode=findFirstCommandNode(xmlDocP);
@@ -241,6 +218,7 @@ xmlNodePtr getNextCommand(xmlDocPtr xmlDocP, xmlNodePtr prevNode)
         firstNode=prevNode->next;
     }
 
+    xmlNodePtr commandNode;
     for (commandNode = firstNode; commandNode; commandNode = commandNode->next)
     {
         if (commandNode->type == XML_ELEMENT_NODE && strcmp((char*)commandNode->name, "command")==0)
@@ -255,25 +233,21 @@ xmlNodePtr getNextCommand(xmlDocPtr xmlDocP, xmlNodePtr prevNode)
 
 int getCommandId(xmlNodePtr commandNode)
 {
-    int id;
-    xmlChar* idP;
-    idP=xmlGetProp(commandNode, BAD_CAST "id");
+    xmlChar* idP=xmlGetProp(commandNode, BAD_CAST "id");
     if(NULL==idP)
     {
         return UNKNOWN_ID;
     }
-    id=atoi((char*)idP);
+    int id=atoi((char*)idP);
     xmlFree(idP);
     return id;
 }
 
 commandtype_t getCommandType(xmlNodePtr commandNode)
 {
-    xmlChar* typeP;
-    commandtype_t type;
     if(NULL==commandNode) return UNKNOWN_TYPE;
-    typeP=xmlGetProp(commandNode, BAD_CAST "type");
-    type=UNKNOWN_TYPE;
+    xmlChar* typeP=xmlGetProp(commandNode, BAD_CAST "type");
+    commandtype_t type=UNKNOWN_TYPE;
     if(typeP!=NULL)
     {
         if(strcmp((char*)typeP,"CMP")==0) type=CMP;
@@ -335,7 +309,7 @@ void getValues(xmlNodePtr commandNodeP, commandtype_t* commandTypeP, uint32_t* i
 uint32_t extractCmpCommand(CmpMessage** cmpCommandsP, uint32_t numberOfCmpCommands, uint32_t id, char* commandValueP, bool ignoreError)
 {
     CmpMessage* localCommandsP=*cmpCommandsP; // localCommandsP is just to make the code a bit more readable
-    CmpMessage* tmpCommandsP=(CmpMessage*)realloc(localCommandsP, sizeof(CmpMessage)*(numberOfCmpCommands+1));
+    CmpMessage* tmpCommandsP=realloc(localCommandsP, sizeof(CmpMessage)*(numberOfCmpCommands+1));
 
     if(tmpCommandsP!=NULL)
     {
@@ -376,11 +350,10 @@ uint32_t extractCmpCommand(CmpMessage** cmpCommandsP, uint32_t numberOfCmpComman
 
 rootpaerror_t handleCmpResponses(uint32_t maxNumberOfCmpResponses, CmpMessage* cmpResponsesP, xmlNodePtr rspResultElementP)
 {
+    LOGD(">>handleCmpResponses %d", maxNumberOfCmpResponses);
     rootpaerror_t ret=ROOTPA_OK;
     uint32_t i;
-    LOGD(">>handleCmpResponses %d", maxNumberOfCmpResponses);
-
-	if(cmpResponsesP == NULL)
+    if(cmpResponsesP == NULL)
     {
         if(maxNumberOfCmpResponses>0)
         {
@@ -428,11 +401,10 @@ uint32_t handleUploadCommand(commandtype_t commandType,
                              char* commandValueP,
                              bool ignoreError)
 {
-    uint8_t* containerDataP = NULL;
-    int containerLength;
-    CommonMessage* localCommandsP=*uploadCommandsP; // localCommandsP is just to make the code a bit more readable
-    CommonMessage* tmpCommandsP=(CommonMessage*)realloc(localCommandsP, sizeof(CommonMessage)*(numberOfUploadCommands+1));
     LOGD(">>handleUploadCommand %d %lx %lx", commandType, (long int) uploadCommandsP, (long int) *uploadCommandsP);
+    CommonMessage* localCommandsP=*uploadCommandsP; // localCommandsP is just to make the code a bit more readable
+    CommonMessage* tmpCommandsP=realloc(localCommandsP, sizeof(CommonMessage)*(numberOfUploadCommands+1));
+
     if(NULL == tmpCommandsP)
     {
         LOGE("handleUploadCommand: was not able to realloc, returning %d", ignoreError);
@@ -457,8 +429,8 @@ uint32_t handleUploadCommand(commandtype_t commandType,
     }
 
     localCommandsP[numberOfUploadCommands].ret=ROOTPA_OK;
-
-    containerLength= base64DecodeStringRemoveEndZero(commandValueP, (char**) &(containerDataP));
+    uint8_t* containerDataP = NULL;
+    int containerLength= base64DecodeStringRemoveEndZero(commandValueP, (char**) &(containerDataP));
 
     if(0 == containerLength)
     {
@@ -492,12 +464,11 @@ uint32_t handleUploadCommand(commandtype_t commandType,
 
 rootpaerror_t handleUploadResponses(uint32_t numberOfUploadResponses, CommonMessage* uploadResponsesP, xmlNodePtr rspResultElementP)
 {
+    LOGD(">>handleUploadResponses %d", numberOfUploadResponses);
     rootpaerror_t ret=ROOTPA_OK;
     char zero=0;
     uint32_t i;
-    LOGD(">>handleUploadResponses %d", numberOfUploadResponses);
-
-	if(uploadResponsesP == NULL)
+    if(uploadResponsesP == NULL)
     {
         if(numberOfUploadResponses>0)
         {
@@ -536,9 +507,12 @@ rootpaerror_t handleUploadResponses(uint32_t numberOfUploadResponses, CommonMess
 
 rootpaerror_t handleCommandAndFillResponse(xmlDocPtr xmlCommandP, xmlDocPtr xmlResponseP)
 {
+    LOGD(">>handleCommandAndFillResponse");
     rootpaerror_t ret=ROOTPA_OK;
     rootpaerror_t tmpRet=ROOTPA_OK;
-    xmlNodePtr rspRootElementP;
+
+    xmlNodePtr rspRootElementP = xmlDocGetRootElement(xmlResponseP);
+    if(NULL==rspRootElementP) return ROOTPA_ERROR_XML;
 
     CmpMessage* cmpCommandsP=NULL;
     CommonMessage* uploadCommandsP=NULL;
@@ -549,15 +523,8 @@ rootpaerror_t handleCommandAndFillResponse(xmlDocPtr xmlCommandP, xmlDocPtr xmlR
     commandtype_t commandType=UNKNOWN_TYPE;
     uint32_t id=0;
     char* commandValueP=NULL;
-    CmpMessage* cmpResponsesP=NULL;
     bool ignoreError=0;
     xmlNodePtr commandNode=NULL;
-    int i;
-
-    LOGD(">>handleCommandAndFillResponse");
-
-    rspRootElementP = xmlDocGetRootElement(xmlResponseP);
-    if(NULL==rspRootElementP) return ROOTPA_ERROR_XML;
 
     // parse command data out of xml, upload commands will also be executed
 
@@ -600,10 +567,13 @@ rootpaerror_t handleCommandAndFillResponse(xmlDocPtr xmlCommandP, xmlDocPtr xmlR
     }
 
     // execute the actual content management protocol commands, if there are any
+
+    CmpMessage* cmpResponsesP=NULL;
     if(cmpCommandsP)
     {
         uint32_t internalError;
-        cmpResponsesP=(CmpMessage *)malloc(sizeof(CmpMessage)*numberOfCmpCommands);
+        cmpResponsesP=malloc(sizeof(CmpMessage)*numberOfCmpCommands);
+        memset(cmpResponsesP, 0, sizeof(CmpMessage)*numberOfCmpCommands);
 
         if(NULL==cmpResponsesP)
         {
@@ -611,7 +581,6 @@ rootpaerror_t handleCommandAndFillResponse(xmlDocPtr xmlCommandP, xmlDocPtr xmlR
         }
         else
         {
-            memset(cmpResponsesP, 0, sizeof(CmpMessage)*numberOfCmpCommands);
             tmpRet=executeContentManagementCommands(numberOfCmpCommands, cmpCommandsP, cmpResponsesP, &internalError);
             if(ROOTPA_OK!=tmpRet)
             {
@@ -643,6 +612,7 @@ rootpaerror_t handleCommandAndFillResponse(xmlDocPtr xmlCommandP, xmlDocPtr xmlR
     }
     // cleanup what has not yet been cleaned
 
+    int i;
     for(i=0; i<numberOfCmpCommands; i++)
     {
         if(cmpCommandsP) free(cmpCommandsP[i].contentP);
@@ -658,28 +628,13 @@ rootpaerror_t handleCommandAndFillResponse(xmlDocPtr xmlCommandP, xmlDocPtr xmlR
 
 void handleError(void* ctx, const char *format, ...)
 {
-	(void) ctx;
-#ifdef WIN32
-	#define ERROR_LOG_LENGTH 256
-    char errMsg[ERROR_LOG_LENGTH];
-
-	va_list args;
-    va_start(args, format);
-    vsnprintf(errMsg, ERROR_LOG_LENGTH, format, args);
-    va_end(args);
-
-	LOGW("From libxml2: %s", errMsg);
-#else
     char *errMsg;
-
-	va_list args;
+    va_list args;
     va_start(args, format);
     vasprintf(&errMsg, format, args);
     va_end(args);
-
-	LOGW("From libxml2: %s", errMsg);
+    LOGW("From libxml2: %s", errMsg);
     free(errMsg);
-#endif
 }
 
 /*
@@ -689,9 +644,9 @@ to be called only if the files do not exist of can not be parsed
 
 void saveFile(char* filePath, char* fileContent)
 {
-
-    FILE* fh;
     LOGD(">>saveFile %s", filePath);
+    FILE* fh;
+
     if ((fh = fopen(filePath, "w")) != NULL)
 	{
         fprintf(fh, "%s", fileContent);
@@ -707,6 +662,7 @@ void saveFile(char* filePath, char* fileContent)
 
 bool validXmlMessage(xmlDocPtr xmlDocP)
 {
+    LOGD(">>validXmlMessage %s", enrollmentServiceFullPath_);
 
     int result=-2;
 
@@ -715,7 +671,7 @@ bool validXmlMessage(xmlDocPtr xmlDocP)
     xmlSchemaParserCtxtPtr parserCtxtP = NULL;
     xmlSchemaPtr schemaP = NULL;
     xmlSchemaValidCtxtPtr validCtxtP = NULL;
-    LOGD(">>validXmlMessage %s", enrollmentServiceFullPath_);
+
 //    Here we store the schemas if they are not already on "disk". It seems
 //    xmlSchemaNewParserCtxt succeeds even if the file does not exists and it is
 //    xmlSchemaParse that requires the file to exists. That is why the files are
@@ -757,19 +713,20 @@ cleanup:
     LOGD("<<validXmlMessage");
     return true;
  #endif // LIBXML_SCHEMAS_ENABLED
+
 }
 
 uint8_t* validateDumpAndFree(xmlDocPtr xmlResponseP)
 {
     uint8_t*  dumpedP=NULL;
-    int size=0;
-    xmlChar* dumpP;
     if(!validXmlMessage(xmlResponseP))
     {
         LOGE("validateDumpAndFree, invalid response");
     }
-
-	xmlDocDumpMemoryEnc(xmlResponseP, &dumpP, &size, "UTF-8");
+    int size=0;
+    xmlChar* dumpP;
+//    xmlDocDumpMemory(xmlResponseP, &dumpP, &size);
+      xmlDocDumpMemoryEnc(xmlResponseP, &dumpP, &size, "UTF-8");
     if(dumpP!=NULL)
     {
         // doing this copy only because libxml2 documentation tells to
@@ -778,11 +735,8 @@ uint8_t* validateDumpAndFree(xmlDocPtr xmlResponseP)
         // compatible with free but since I have not verified it, this is to
         // be on the safe side
 
-        dumpedP=(uint8_t*)malloc(size+1);
-        if(dumpedP!=NULL)
-        {
-            strncpy((char*) dumpedP, (char*) dumpP, size+1);
-        }
+        dumpedP=malloc(size+1);
+        strncpy((char*) dumpedP, (char*) dumpP, size+1);
         xmlFree(dumpP);
     }
     xmlFreeDoc(xmlResponseP);
@@ -797,14 +751,10 @@ uint8_t* validateDumpAndFree(xmlDocPtr xmlResponseP)
 */
 rootpaerror_t handleXmlMessage(const char* messageP, const char** responseP)
 {
-
+    LOGD(">>handleXmlMessage");
     rootpaerror_t ret=ROOTPA_OK;
     rootpaerror_t tmpRet=ROOTPA_OK;
-    xmlDocPtr xmlDocP;
-    xmlDocPtr xmlResponseP;
-
     *responseP=NULL;
-    LOGD(">>handleXmlMessage");
 
     if (NULL==messageP)
     {
@@ -817,7 +767,7 @@ rootpaerror_t handleXmlMessage(const char* messageP, const char** responseP)
     xmlThrDefSetStructuredErrorFunc(NULL, NULL);
     xmlThrDefSetGenericErrorFunc(NULL, handleError);
 
-    xmlDocP= xmlParseMemory(messageP, strlen(messageP));
+    xmlDocPtr xmlDocP= xmlParseMemory(messageP, strlen(messageP));
     if(NULL==xmlDocP)
     {
         LOGE("handleXmlMessage, can not parse xmlMessageP %s", messageP);
@@ -831,7 +781,7 @@ rootpaerror_t handleXmlMessage(const char* messageP, const char** responseP)
         // attempting to parse the message anyway.
     }
 
-   xmlResponseP=createXmlResponse();
+    xmlDocPtr xmlResponseP=createXmlResponse();
 
 // parse received command
 
@@ -912,9 +862,9 @@ rootpaerror_t fillSystemInfo(xmlNodePtr systemInfoNode, const osInfo_t* osSpecif
 
 rootpaerror_t fillMcVersion(xmlNodePtr mcVersionNode, int mcVersionTag, const mcVersionInfo_t* mcVersionP)
 {
-	(void) mcVersionTag;
-    char intBuffer[INT_BUFFER_LENGTH];
     LOGD(">>fillMcVersion");
+    char intBuffer[INT_BUFFER_LENGTH];
+
     xmlSetStructuredErrorFunc(NULL, NULL);
     xmlSetGenericErrorFunc(NULL, handleError);
     xmlThrDefSetStructuredErrorFunc(NULL, NULL);
@@ -953,24 +903,19 @@ rootpaerror_t fillMcVersion(xmlNodePtr mcVersionNode, int mcVersionTag, const mc
 rootpaerror_t buildXmlTrustletInstallationRequest(const char** responseP, trustletInstallationData_t data )
 {
     char intBuffer[INT_BUFFER_LENGTH];
-    rootpaerror_t ret=ROOTPA_OK;
-    xmlDocPtr xmlResponseDocP;
-    xmlNodePtr rspRootElementP;
-    xmlNodePtr systemInfoNode;
-    xmlNodePtr mcDataNode=NULL;
-    char* encodedDataP;
-    char* pukHashStringP;
     LOGD(">>buildXmlTrustletInstallationRequest %ld (%ld %d %d)", (long int) responseP, (long int) data.dataP, data.dataLength, data.dataType);
+    rootpaerror_t ret=ROOTPA_OK;
     if(NULL ==  responseP) return ROOTPA_ERROR_ILLEGAL_ARGUMENT; // data content checked earlier in commandhandler.c
 
-    xmlResponseDocP=createXmlResponse();
-    rspRootElementP = xmlDocGetRootElement(xmlResponseDocP);
+    xmlDocPtr xmlResponseDocP=createXmlResponse();
+    xmlNodePtr rspRootElementP = xmlDocGetRootElement(xmlResponseDocP);
     if(NULL==rspRootElementP) return ROOTPA_ERROR_XML;
 
-    systemInfoNode=xmlNewChild(rspRootElementP, nameSpace_, BAD_CAST "tltInstallationRequest", NULL);
+    xmlNodePtr systemInfoNode=xmlNewChild(rspRootElementP, nameSpace_, BAD_CAST "tltInstallationRequest", NULL);
     if(NULL==systemInfoNode) return ROOTPA_ERROR_XML;
 
-    encodedDataP=base64EncodeAddEndZero((char*) data.dataP, data.dataLength);
+    xmlNodePtr mcDataNode=NULL;
+    char* encodedDataP=base64EncodeAddEndZero((char*) data.dataP, data.dataLength);
     if(NULL==encodedDataP)
     {
         LOGE("buildXmlTrustletInstallationRequest: base64 encoding of data failed");
@@ -1022,7 +967,7 @@ rootpaerror_t buildXmlTrustletInstallationRequest(const char** responseP, trustl
         return ROOTPA_ERROR_XML;
     }
 
-    pukHashStringP=base64EncodeAddEndZero((char*) data.tltPukHashP, data.tltPukHashLength);
+    char* pukHashStringP=base64EncodeAddEndZero((char*) data.tltPukHashP, data.tltPukHashLength);
     if(NULL==pukHashStringP)
     {
         LOGE("buildXmlTrustletInstallationRequest: base64 encoding of PukHash failed");
@@ -1056,28 +1001,23 @@ in case an error is returned *responseP is set to NULL
 */
 rootpaerror_t buildXmlSystemInfo(const char** responseP, int mcVersionTag, const mcVersionInfo_t* mcVersionP, const osInfo_t* osSpecificInfoP)
 {
-
-    rootpaerror_t ret=ROOTPA_OK;
-    xmlDocPtr xmlResponseDocP;
-    xmlNodePtr rspRootElementP;
-    xmlNodePtr systemInfoNode;
-    xmlNodePtr mcVersionNode;
-    if(NULL == responseP || NULL == mcVersionP || NULL == osSpecificInfoP) return ROOTPA_ERROR_INTERNAL;
     LOGD(">>buildXmlSystemInfo %ld %ld %ld", ( long int ) responseP, ( long int ) mcVersionP, ( long int ) osSpecificInfoP);
+    rootpaerror_t ret=ROOTPA_OK;
+    if(NULL == responseP || NULL == mcVersionP || NULL == osSpecificInfoP) return ROOTPA_ERROR_INTERNAL;
 
     xmlSetStructuredErrorFunc(NULL, NULL);
     xmlSetGenericErrorFunc(NULL, handleError);
     xmlThrDefSetStructuredErrorFunc(NULL, NULL);
     xmlThrDefSetGenericErrorFunc(NULL, handleError);
 
-    xmlResponseDocP=createXmlResponse();
-    rspRootElementP= xmlDocGetRootElement(xmlResponseDocP);
+    xmlDocPtr xmlResponseDocP=createXmlResponse();
+    xmlNodePtr rspRootElementP = xmlDocGetRootElement(xmlResponseDocP);
     if(NULL==rspRootElementP) return ROOTPA_ERROR_XML;
 
-    systemInfoNode=xmlNewChild(rspRootElementP, nameSpace_, BAD_CAST "systemInformation", NULL);
+    xmlNodePtr systemInfoNode=xmlNewChild(rspRootElementP, nameSpace_, BAD_CAST "systemInformation", NULL);
     if(NULL==systemInfoNode) return ROOTPA_ERROR_XML;
 
-    mcVersionNode=xmlNewChild(systemInfoNode, typesNameSpace_, BAD_CAST "mcVersion", NULL);
+    xmlNodePtr mcVersionNode=xmlNewChild(systemInfoNode, typesNameSpace_, BAD_CAST "mcVersion", NULL);
     if(NULL==mcVersionNode) return ROOTPA_ERROR_XML;
 
     ret=fillSystemInfo(systemInfoNode, osSpecificInfoP);
@@ -1113,11 +1053,8 @@ void setXsdPaths(const char* xsdpathP)
 
     if (xsdpathP!=NULL && strlen(xsdpathP)+1+sizeof(ENROLLMENT_SERVICE_XSD_NAME)<XSD_PATH_MAX_LEN) // ENROLLMENT_SERVICE_XSD_NAME is the longer of the two
     {
-/* Fix coverity */
-//        strncpy(enrollmentServiceFullPath_, xsdpathP, XSD_PATH_MAX_LEN);
-//        strncpy(platformTypesFullPath_, xsdpathP, XSD_PATH_MAX_LEN);
-        strncpy(enrollmentServiceFullPath_, xsdpathP, XSD_PATH_MAX_LEN-1);
-        strncpy(platformTypesFullPath_, xsdpathP, XSD_PATH_MAX_LEN-1);
+        strncpy(enrollmentServiceFullPath_, xsdpathP, XSD_PATH_MAX_LEN);
+        strncpy(platformTypesFullPath_, xsdpathP, XSD_PATH_MAX_LEN);
 
         strncat(enrollmentServiceFullPath_, "/", XSD_PATH_MAX_LEN-strlen(xsdpathP));
         strncat(platformTypesFullPath_, "/", XSD_PATH_MAX_LEN-strlen(xsdpathP));

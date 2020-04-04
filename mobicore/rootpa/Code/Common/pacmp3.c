@@ -1,37 +1,37 @@
 /*
- * Copyright (c) 2013 TRUSTONIC LIMITED
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the TRUSTONIC LIMITED nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+Copyright  © Trustonic Limited 2013
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+
+  3. Neither the name of the Trustonic Limited nor the names of its contributors
+     may be used to endorse or promote products derived from this software
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 #include <string.h>
 #include <stdlib.h>
-#include <wrapper.h>
+#include <stdbool.h>
 #include <TlCm/3.0/cmpMap.h>
 #include <TlCm/tlCmApiCommon.h>
 
@@ -111,7 +111,7 @@ rootpaerror_t allocateResponseBuffer(CmpMessage* responseP, CMTHANDLE handle )
         return ROOTPA_ERROR_INTERNAL;
     }
     LOGD("allocateResponseBuffer, size %d", responseP->length);
-    responseP->contentP=(uint8_t*)malloc(responseP->length);
+    responseP->contentP=malloc(responseP->length);
     if(responseP->contentP==NULL) return ROOTPA_ERROR_OUT_OF_MEMORY;
     return ROOTPA_OK;
 }
@@ -120,7 +120,7 @@ bool ensureMappedBufferSize(CMTHANDLE handle, uint32_t neededSize)
 {
     if( neededSize > handle->mappedSize)
     {
-        uint8_t* newMappedP = (uint8_t*)realloc(handle->mappedP, neededSize);
+        uint8_t* newMappedP = realloc(handle->mappedP, neededSize);
         if(!newMappedP)
         {
             LOGE("ensureMappedBufferSize, unable to allocate more memory %d", neededSize);
@@ -244,13 +244,14 @@ rootpaerror_t addTltContainer(uint32_t* indexP, uint32_t* offsetP, const mcUuid_
 
 rootpaerror_t prepareCommand(cmpCommandId_t commandId, CmpMessage* inCommandP,  CMTHANDLE handle, CmpMessage* responseP)
 {
+    LOGI("prepareCommand command id %d length %d", commandId, inCommandP->length);  // this is LOGI level on purpose to indicate that CMP command has reached RootPA
+
     uint8_t* outCommandP =handle->mappedP;
 
     uint32_t offset=0;
     uint32_t elementIndex=1;
     rootpaerror_t ret=ROOTPA_OK;
     mcResult_t mcRet=MC_DRV_OK;
-    LOGI("prepareCommand command id %d length %d", commandId, inCommandP->length);  // this is LOGI level on purpose to indicate that CMP command has reached RootPA
 
     memset(handle->wsmP,0,sizeOfCmp());
 
@@ -367,9 +368,9 @@ rootpaerror_t prepareCommand(cmpCommandId_t commandId, CmpMessage* inCommandP,  
 
 mcResult_t storeContainers(cmpCommandId_t commandId, CMTHANDLE handle, uint32_t elementIndex, uint32_t  offset)
 {
+    LOGD(">>pacmp3 storeContainers for %d element %d offset %d", commandId, elementIndex, offset);
     mcResult_t mcRet=MC_DRV_OK;
     uint32_t length=0;
-    LOGD(">>pacmp3 storeContainers for %d element %d offset %d", commandId, elementIndex, offset);
 
 // store the containers when needed
     switch(commandId)
@@ -608,13 +609,10 @@ returned to the client.
 */
 rootpaerror_t handleResponse(cmpCommandId_t commandId, CmpMessage* outResponseP, CMTHANDLE handle)
 {
+    LOGD(">>handleResponse for command %d ", commandId);
     mcResult_t mcRet=MC_DRV_OK;
     rootpaerror_t ret=ROOTPA_OK;
-    uint32_t elementIndex=1;
-    uint32_t offset=0;
-    uint32_t length=0;
 
-    LOGD(">>handleResponse for command %d ", commandId);
 
     if(isValidResponseTo(commandId, handle->wsmP)==false)
     {
@@ -622,6 +620,10 @@ rootpaerror_t handleResponse(cmpCommandId_t commandId, CmpMessage* outResponseP,
         outResponseP->hdr.ret=ROOTPA_ERROR_COMMAND_EXECUTION;
         return ROOTPA_ERROR_COMMAND_EXECUTION;
     }
+
+    uint32_t elementIndex=1;
+    uint32_t offset=0;
+    uint32_t length=0;
 
     ret=allocateResponseBuffer(outResponseP, handle);
 
@@ -655,7 +657,7 @@ rootpaerror_t handleResponse(cmpCommandId_t commandId, CmpMessage* outResponseP,
     if(mcRet != MC_DRV_OK)
     {
         LOGE("pacmp3 handleResponse for %d registry failed %d", commandId, mcRet);
-        if((mcResult_t)-1==mcRet)
+        if(-1==mcRet)
         {
             ret = ROOTPA_ERROR_INTERNAL;
         }

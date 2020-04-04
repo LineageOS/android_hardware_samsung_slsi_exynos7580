@@ -28,25 +28,11 @@
          -->
     <property file="ant.properties" />
 
-<!-- All the build information will be stored in a seperate logfile 
-     including a timestamp. -->
-<target name="log">
-<tstamp><format property="timestamp" pattern="yyyy-MM-dd_HH-mm-ss"/></tstamp>
-<property name="build.log.dir" location="${basedir}/buildlogs"/>
-<mkdir dir="${build.log.dir}"/>
-<property name="build.log.filename" value="build_${timestamp}.log"/>
-<record name="${build.log.dir}/${build.log.filename}" loglevel="verbose" append="false"/>
-<echo message="Build logged to ${build.log.filename}"/>
-</target>
-
     <!-- if sdk.dir was not set from one of the property file, then
          get it from the ANDROID_HOME env var.
          This must be done before we load project.properties since
          the proguard config can use sdk.dir -->
     <property environment="env" />
-<condition property="ndk.dir" value="${env.NDK_HOME}">
-     <isset property="env.NDK_HOME" />
-</condition>
     <condition property="sdk.dir" value="${env.ANDROID_HOME}">
         <isset property="env.ANDROID_HOME" />
     </condition>
@@ -62,49 +48,11 @@
          application and should be checked into Version Control Systems. -->
     <loadproperties srcFile="project.properties" />
 
-<!-- 
--Update android project
--Running ndk-build to compile native android sources-->
-
-<target name="windows">
-
-<exec executable="cmd"
-    failonerror="true">
-        <arg value="/c"/>
-    <arg value="${env.ANDROID_HOME}/tools/android update project --path ./"/>
-</exec>
-
-<exec executable="${env.NDK_BUILD}/ndk-build.cmd"/>
-
-<antcall target="copy_libs"/>
-
-</target>
-
-<target name="linux">
-
-<exec
-    executable="${env.ANDROID_HOME}/tools/android"
-    failonerror="true">
-        <arg value="update"/>
-        <arg value="project"/>
-        <arg value="-p"/>
-        <arg value="."/>
-</exec>
-
-<exec executable="${env.NDK_BUILD}/ndk-build"/>
-</target>
-
-
     <!-- quick check on sdk.dir -->
     <fail
             message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
             unless="sdk.dir"
     />
-
-<!-- quick check on ndk.dir -->
-
-<fail message="ndk.dir is missing. Make sure that the local.properties file defines it."
-          unless="ndk.dir" />
 
     <!--
         Import per project custom build rules if present at the root of the project.

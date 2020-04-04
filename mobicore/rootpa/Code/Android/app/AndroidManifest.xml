@@ -6,12 +6,12 @@
           android:versionName="@string/name" >
 
   <uses-sdk android:minSdkVersion="14"
-           android:targetSdkVersion="23" />
+           android:targetSdkVersion="17" />
 
   <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />    
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-           android:maxSdkVersion="22" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />  
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     
   <permission android:name="com.gd.mobicore.pa.permission.OEM_PERMISSION"
         android:label="remove installed secure services"

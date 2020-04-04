@@ -1,33 +1,33 @@
 /*
- * Copyright (c) 2013 TRUSTONIC LIMITED
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the TRUSTONIC LIMITED nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+Copyright  © Trustonic Limited 2013
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this 
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice, 
+     this list of conditions and the following disclaimer in the documentation 
+     and/or other materials provided with the distribution.
+
+  3. Neither the name of the Trustonic Limited nor the names of its contributors 
+     may be used to endorse or promote products derived from this software 
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 package com.gd.mobicore.pa.ifc;
 
 import android.os.Parcel;
@@ -36,18 +36,18 @@ import android.os.Parcelable;
 /**
     Base class for content management protocol commands and responses
     @see CmpCommand
-    @see CmpResponse
+    @see CmpResponse     
 */
 public abstract class CmpMsg implements Parcelable{
 
-// CMP message ID's
+// CMP message ID's    
     public static final int MC_CMP_CMD_AUTHENTICATE=0;
     public static final int MC_CMP_CMD_BEGIN_ROOT_AUTHENTICATION=1;
     public static final int MC_CMP_CMD_BEGIN_SOC_AUTHENTICATION=2;
     public static final int MC_CMP_CMD_BEGIN_SP_AUTHENTICATION=3;
     public static final int MC_CMP_CMD_GENERATE_AUTH_TOKEN=4;
     public static final int MC_CMP_CMD_GET_VERSION=5;
-
+    
     public static final int MC_CMP_CMD_ROOT_CONT_LOCK_BY_ROOT=7;
 
     public static final int MC_CMP_CMD_ROOT_CONT_REGISTER_ACTIVATE=9;
@@ -73,7 +73,7 @@ public abstract class CmpMsg implements Parcelable{
 
 // indices and masks
     public static final int MSG_ID_IDX=0;
-    public static final int INT_LENGTH=4;
+    public static final int INT_LENGTH=4;    
     public static final int RSP_ID_MASK=(1 << 31);
 
     /**
@@ -137,12 +137,12 @@ public abstract class CmpMsg implements Parcelable{
         return content_;
     }
 
-
+    
     protected int msgId()
     {
         return getInt(MSG_ID_IDX);
     }
-
+    
     protected void setMsgId(int id)
     {
         setInt(MSG_ID_IDX, id);
@@ -153,10 +153,10 @@ public abstract class CmpMsg implements Parcelable{
 
     private void createEmptyContentIfNeeded(int index, int size){
         if(content_==null){
-            content_=new byte[size];
+            content_=new byte[size];           
             setLength(content_.length); // we keep the length field automatically up to date
         }else if(content_.length<(index+size)){
-            byte[] newarray=new byte[index+size];
+            byte[] newarray=new byte[index+size];    
             System.arraycopy(content_, 0, newarray, 0, content_.length);
             content_=newarray;
             setLength(content_.length); // we keep the length field automatically up to date
@@ -172,9 +172,9 @@ public abstract class CmpMsg implements Parcelable{
     {
         createEmptyContentIfNeeded(index, INT_LENGTH);
         content_[index+0]=(byte) (value & 0xFF);
-        content_[index+1]=(byte)((value >> 8) & 0xFF);
-        content_[index+2]=(byte) ((value >> 16) & 0xFF);
-        content_[index+3]=(byte) ((value >> 24) & 0xFF);
+        content_[index+1]=(byte)((value >> 8) & 0xFF); 
+        content_[index+2]=(byte) ((value >> 16) & 0xFF); 
+        content_[index+3]=(byte) ((value >> 24) & 0xFF);         
     }
 
 
@@ -200,9 +200,9 @@ public abstract class CmpMsg implements Parcelable{
     */
     public int getInt(int index) throws ArrayIndexOutOfBoundsException
     {
-        return (content_[index] & 0xFF) +
-               ((content_[index+1] & 0xFF) << 8) +
-               ((content_[index+2] & 0xFF) << 16) +
+        return (content_[index] & 0xFF) + 
+               ((content_[index+1] & 0xFF) << 8) + 
+               ((content_[index+2] & 0xFF) << 16) + 
                ((content_[index+3] & 0xFF) << 24);
     }
 
@@ -215,9 +215,9 @@ public abstract class CmpMsg implements Parcelable{
     */
     public byte[] getByteArray(int index, int length) throws ArrayIndexOutOfBoundsException
     {
-        byte[] newarray=new byte[length];
+        byte[] newarray=new byte[length];    
         System.arraycopy(content_, index, newarray, 0, length);
-        return newarray;
+        return newarray;        
     }
 
 
@@ -236,10 +236,10 @@ public abstract class CmpMsg implements Parcelable{
 // data ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     private byte[] content_;
-    boolean ignoreError_=false;  // this is moved from CmpCommand since
-                                 // for some reason it is always false
-                                 // if CmpCommand.ignoreError() called
-                                 // with JNI CallBooleanMethod but if
+    boolean ignoreError_=false;  // this is moved from CmpCommand since 
+                                 // for some reason it is always false 
+                                 // if CmpCommand.ignoreError() called 
+                                 // with JNI CallBooleanMethod but if 
                                  // this is here it works
 
 // stuff related to parcelable ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -252,11 +252,11 @@ public abstract class CmpMsg implements Parcelable{
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
+    public int describeContents() {  
+        return 0;  
+    }     
 
-    @Override
+    @Override    
     public void writeToParcel(Parcel out, int flags){
         out.writeByteArray(content_);
     }

@@ -1,33 +1,33 @@
 /*
- * Copyright (c) 2013 TRUSTONIC LIMITED
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the TRUSTONIC LIMITED nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+Copyright  © Trustonic Limited 2013
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+
+  3. Neither the name of the Trustonic Limited nor the names of its contributors
+     may be used to endorse or promote products derived from this software
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 /** \addtogroup ROOTPA AIDL Interfaces
  * @{
@@ -46,9 +46,9 @@ import com.gd.mobicore.pa.ifc.SPContainerStructure;
 import com.gd.mobicore.pa.ifc.SPContainerStateParcel;
 
 /**
-* RootPAServiceIfc is intended for SP.PA use at the time of installing new TA. It provides means
-* to communicate with content management TA (using CMP version 3), request SE to perform provisioning
-* of root container and TA container and means to obtain some information on the MobiCore and its registry.
+* RootPAServiceIfc is intended for SP.PA use at the time of installing new trustlet. It provides means
+* to communicate with content management trustlet (using CMP version 3), request SE to perform provisioning
+* of root container and trustlet container and means to obtain some information on the MobiCore and its registry.
 *
 * The service is started by sending intent com.gd.mobicore.pa.service.PROVISIONING_SERVICE in binding.
 */
@@ -180,7 +180,7 @@ interface RootPAServiceIfc {
      * acquired while this method runs.
      *
      * @param spid provides [in] the id of the SP (SPCont)
-     * @param cs [out] state of the sp container and a list of installed TA containers for the given SP
+     * @param cs [out] state of the sp container and a list of installed trustlet containers for the given SP
      * @return indication of successful completion
      */
     CommandResult getSPContainerStructure(in SPID spid, out SPContainerStructure cs);
@@ -196,16 +196,6 @@ interface RootPAServiceIfc {
      */
     CommandResult getSPContainerState(in SPID spid, out SPContainerStateParcel state);
 
-
-    /**
-     * Stores the actual TA binary to registry.
-     *
-     * @param spid [in] service provider id
-     * @param uuid [in] unique UUID of the TA
-     * @param taBinary [in] the actual TA to be stored
-     * @return indication of successful completion
-     */
-    CommandResult storeTA(in SPID spid, in byte[] uuid, in byte[] taBinary);
 }
 
 /**@}*/

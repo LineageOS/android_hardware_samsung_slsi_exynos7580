@@ -1,33 +1,33 @@
 /*
- * Copyright (c) 2013 TRUSTONIC LIMITED
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the TRUSTONIC LIMITED nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+Copyright  © Trustonic Limited 2013
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this 
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice, 
+     this list of conditions and the following disclaimer in the documentation 
+     and/or other materials provided with the distribution.
+
+  3. Neither the name of the Trustonic Limited nor the names of its contributors 
+     may be used to endorse or promote products derived from this software 
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 #ifndef CACERTS_H
 #define CACERTS_H
 
@@ -56,47 +56,24 @@ hISypnUvXAN/BZXIwQXSAOqajTGEv3X/wLyasm3nkEX29IgDvknLBoqnTS9rD2LQ\n\
 4BnqNQubr5XROBOlwdkrHTveN4Y9pA==\n\
 -----END CERTIFICATE-----\n\
 \n\
-Apache2 vHost CA\n\
+Self signed certificate for 10.0.2.2 for RootPA testing purposes\n\
 ================================================================\n\
 -----BEGIN CERTIFICATE-----\n\
-MIIHGzCCBQOgAwIBAgIJAOoMGzaC8DnTMA0GCSqGSIb3DQEBBQUAMIGiMQswCQYD\n\
-VQQGEwJGSTEQMA4GA1UECBMHRmlubGFuZDERMA8GA1UEBxMISGVsc2lua2kxEjAQ\n\
-BgNVBAoTCVRydXN0b25pYzEWMBQGA1UECxMNVHJ1c3RvbmljIFBLSTEaMBgGA1UE\n\
-AxMRVHJ1c3RvbmljIFJvb3QgQ0ExJjAkBgkqhkiG9w0BCQEWF3dlYm1hc3RlckB0\n\
-cnVzdG9uaWMuY29tMB4XDTEzMDIwNzA5MjgxM1oXDTMzMDIwMjA5MjgxM1owgaIx\n\
-CzAJBgNVBAYTAkZJMRAwDgYDVQQIEwdGaW5sYW5kMREwDwYDVQQHEwhIZWxzaW5r\n\
-aTESMBAGA1UEChMJVHJ1c3RvbmljMRYwFAYDVQQLEw1UcnVzdG9uaWMgUEtJMRow\n\
-GAYDVQQDExFUcnVzdG9uaWMgUm9vdCBDQTEmMCQGCSqGSIb3DQEJARYXd2VibWFz\n\
-dGVyQHRydXN0b25pYy5jb20wggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoIC\n\
-AQDVo+0b8pUmMQZtCMs23qQJFGMAGoeeDw0h7YL/IQsXdWVldyMi+dJKibQY+sK0\n\
-7kg/1EyqAzSm0XQd1WPoPrbz11jHjfNXCXn3UVrVaccO/SUznC7BQ7BGLQC5A/ll\n\
-hJ65Eg2V+N/nAqfdN2Dto+3Eq9Kveqoxl6+hDrGtg44NyKI1bByTy32ZeQ9SL64E\n\
-MJmN6FTAdfW9ngiQ+lijooQ1Rv+Z/bgIw2Pz1wqUHDic7HPuVt1DO2aBmfXH9/Wr\n\
-sVCZu2+lXOaveU7zGcI/tSQijWTIAqE9EvvIl30TUt4AnyFShApyoVYTxNtkDoMz\n\
-XyrIXTsKIEVWSkpmQin8Q17R8URrluWOIN7Fr6JS64Rs6ZuBFi1/Ly3a1JleXV72\n\
-y4gM5AaAA216ntppX7B9cvjbjuW20bcmwJJ7nTikaA0D90J9kHGBCmOKNxI+baiy\n\
-IUPH4l9TaGykuqQ6GCLNMjpeKpo5pnRYZQxIzKmvWWAo96wRYZ+5P3ViUhSfNn6f\n\
-5AhAOwyAiAIiC/3Vuc2dDS4cE/IaWLTfva9IxSdW5fW6oURTsft9dLPGM9vkFTjO\n\
-ODs00hM4Q6a6WsmeIoaH/WgVD+MVlIO3o8+fUhdiQJyZIgtt/cquAlkr4/xBaARZ\n\
-0NMMKOZmiQJ27xqO8F0YoGmIks5wsN9AMV7BwlDs+rVffwIDAQABo4IBUDCCAUww\n\
-MAYJYIZIAYb4QgENBCMWIVtSb290IGNlcnRpZmljYXRpb24gYXV0aG9yaXR5XSBD\n\
-QTAdBgNVHQ4EFgQUWE1tsuTxDUQ4e+C8KJR6Y1Icn30wgdcGA1UdIwSBzzCBzIAU\n\
-WE1tsuTxDUQ4e+C8KJR6Y1Icn32hgaikgaUwgaIxCzAJBgNVBAYTAkZJMRAwDgYD\n\
-VQQIEwdGaW5sYW5kMREwDwYDVQQHEwhIZWxzaW5raTESMBAGA1UEChMJVHJ1c3Rv\n\
-bmljMRYwFAYDVQQLEw1UcnVzdG9uaWMgUEtJMRowGAYDVQQDExFUcnVzdG9uaWMg\n\
-Um9vdCBDQTEmMCQGCSqGSIb3DQEJARYXd2VibWFzdGVyQHRydXN0b25pYy5jb22C\n\
-CQDqDBs2gvA50zASBgNVHRMBAf8ECDAGAQH/AgEAMAsGA1UdDwQEAwIBBjANBgkq\n\
-hkiG9w0BAQUFAAOCAgEAJfOt6/wv8CMV5eP6191m68N3Ig0FypzqQlsYbLmKlOmj\n\
-80lVydHqp2nJGaqnCwmwzf8G+TkhvGqF9V+sABkoh+d1vOZAz486gmZNtx4yTIXm\n\
-0/n/RmrDf6jRx1RP7nNa+vNHjhGAdcXnWkYSbD/vWqSU9ujRPRWghAczOX35zfF1\n\
-JwCSzwNHXkQ98YitO9vB00yUCnoczSA9Dn2ffJtHzeWU0gbouN5Lbb65yB0F+SFY\n\
-zmDXXk2RiBKOF5NJZMX2XfxubgeU+CVE9Upe/mt8aoYzovO/IEx6SgJw2pvEGvXS\n\
-nt7I1oI0xa4TSe4eGnqEwrvESpE4lBDHRtxZ6wtD4iYj30oMXbmg1OrLE9ZypVRa\n\
-7SJTiOCABTy4RxVU9A+jFDDvMjpgH3YTahGoctjJ/8LZwElYDS0eursyBtv/PwXH\n\
-V+P1fBz9s4tBeAzUGt7N4EbL82oB4nna8uc2r60+TOeRGQtVSyatPBZ6755WVS8U\n\
-msd5TjlPsNhZzA30D84Ww9qEXUa+5yNZNYyOZ5bnxa/3Wusmn27SKB7Pa6SijWdl\n\
-IbToFKVSPR5Ehzr2Z1Qw24tLJkVgJUPiu/O1T5WVwgIC36+dXrdUGtVJr7YX3NgI\n\
-2I+wG6EdzBYoWSWa7vkx1YqhLF2zY1SRECGGljUhXJhlziwAQFgzLGwAQ8RMsoU=\n\
+MIICyTCCAbGgAwIBAgIJAPJnq4Q6g6GlMA0GCSqGSIb3DQEBBQUAMBQxEjAQBgNV\n\
+BAMTCXRlcm9ua29uZTAeFw0xMzAyMjAwODM4MzBaFw0yMzAyMTgwODM4MzBaMBQx\n\
+EjAQBgNVBAMTCXRlcm9ua29uZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC\n\
+ggEBANTqu+e+gvW7fzoq59DlM2z4kWLYfGKY0DKs8dB15uo1p3tAEn/SWxTE5s8t\n\
+HxW7ui7fs5JL8AC/94jCAbeN/xPJBf4nVdjnlg19fWiylcq4Ib+FxhCar6bu/a2W\n\
+uUvI8IuM42Z8uyybBRVv8Q1Sqn+O4YiPfvVi+7oAu0pE1vemlXZ7SyXecBBtqBpy\n\
+sWfW2lV4ixeLqSay9o/ZgHRdUdkZorv/eDpLlVIwo7zmQsLb0jbGMlfRATsNkYI8\n\
+IEOxPdJSIUjnY+tZcMYQniCc0CnxWIMAxWJxMgQchyCQPkNAStwEsO0Ty3NJKGfr\n\
+mMHIzc58x999i+MeZ80AWbLjjX0CAwEAAaMeMBwwCQYDVR0TBAIwADAPBgNVHREE\n\
+CDAGhwQKAAICMA0GCSqGSIb3DQEBBQUAA4IBAQACnClBnUXBUf+GmFlq2F+8k4m1\n\
+0A9q+7Krk56JgqzdBMy8SO7FHnsyd2azWoqXzSuJyVsTMfCD0xfWXKSdzJJPJvUR\n\
+SYNQxYNUWbVKfXjXQnALltR7D+IvHWCukeohBx3nPjnFzfb68xyr2809RTEdYFyq\n\
+3olggSjYDRiX+n1XP8ryx/l10X8M9cKkLXsa9o8bSyYrpxPuYPCM6bD9g2xriAO+\n\
+1irwp3fWWFcm1oedSSNv8E9AiZuevuliT5+0BtoXY11NE+ipPKDtJUVuo2gHRcqo\n\
+/92iZY4T5y0ERhZ2jnRB5k6xdb94EdL2aSBmz6XXbr7thAE29HUwkprKYaAt\n\
 -----END CERTIFICATE-----\n"
 
 #endif

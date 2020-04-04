@@ -39,7 +39,6 @@
 # (including RootPA/Common) checked out in order to sucessfully 
 # complete te build
 #
-APP_PIE := true
-LOCAL_32_BIT_ONLY := true
+
 include $(call all-subdir-makefiles)
 

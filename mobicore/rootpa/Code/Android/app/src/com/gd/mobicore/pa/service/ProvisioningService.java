@@ -1,33 +1,33 @@
 /*
- * Copyright (c) 2013 TRUSTONIC LIMITED
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the TRUSTONIC LIMITED nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+Copyright  © Trustonic Limited 2013
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+
+  3. Neither the name of the Trustonic Limited nor the names of its contributors
+     may be used to endorse or promote products derived from this software
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 package com.gd.mobicore.pa.service;
 
@@ -340,7 +340,7 @@ public class ProvisioningService extends BaseService {
             if(ret==CommandResult.ROOTPA_OK){
 
                 SPContainerState s=mapSpContainerState(ints[CONTAINER_STATE_IDX]);
-          	    cs.setState(s);
+		    cs.setState(s);
                 if (s == SPContainerState.UNDEFINED){
                     ret=CommandResult.ROOTPA_ERROR_INTERNAL;
                 }
@@ -364,7 +364,7 @@ public class ProvisioningService extends BaseService {
                 }
 
             }else if (ret==CommandResult.ROOTPA_ERROR_INTERNAL_NO_CONTAINER){
-           	    cs.setState(SPContainerState.DOES_NOT_EXIST);
+		    cs.setState(SPContainerState.DOES_NOT_EXIST);
                 ret=CommandResult.ROOTPA_OK;
             }
 
@@ -410,12 +410,12 @@ public class ProvisioningService extends BaseService {
             if(ret==CommandResult.ROOTPA_OK){
 
                 SPContainerState s=mapSpContainerState(containerState[0]);
-          	    state.setEnumeratedValue(s);
+		    state.setEnumeratedValue(s);
                 if (s == SPContainerState.UNDEFINED){
                     ret=CommandResult.ROOTPA_ERROR_INTERNAL;
                 }
             }else if (ret==CommandResult.ROOTPA_ERROR_INTERNAL_NO_CONTAINER){
-           	    state.setEnumeratedValue(SPContainerState.DOES_NOT_EXIST);
+		    state.setEnumeratedValue(SPContainerState.DOES_NOT_EXIST);
                 ret=CommandResult.ROOTPA_OK;
             }
 
@@ -429,24 +429,6 @@ public class ProvisioningService extends BaseService {
 
 
             Log.d(TAG,"<<RootPAServiceIfc.Stub.getSPContainerState");
-            return new CommandResult(ret);
-        }
-
-        public CommandResult storeTA(SPID spid, byte[] uuid, byte[] taBinary){
-            Log.d(TAG,">>RootPAServiceIfc.Stub.storeTA");
-            if(spid==null||uuid==null||taBinary==null|| taBinary.length == 0 || spid.spid()==0){ // having null out variable leads to null pointer exception in the client, however we still want to do checking so that there is not unncessary execution of the following code
-                return new CommandResult(CommandResult.ROOTPA_ERROR_ILLEGAL_ARGUMENT);
-            }
-
-            int ret=CommandResult.ROOTPA_OK;
-            try{
-                ret=commonPAWrapper().storeTA(spid.spid(), uuid, taBinary);
-            }catch(Exception e){
-                Log.e(TAG,"CommonPAWrapper().storeTA exception: ", e);
-                ret=CommandResult.ROOTPA_ERROR_INTERNAL;
-            }
-
-            Log.d(TAG,"<<RootPAServiceIfc.Stub.storeTA");
             return new CommandResult(ret);
         }
 
@@ -467,11 +449,11 @@ public class ProvisioningService extends BaseService {
                     state=TrustletContainerState.ACTIVATED;
                     break;
                 case MC_CONT_STATE_SP_LOCKED:
-               	    state=TrustletContainerState.SP_LOCKED;
+		    state=TrustletContainerState.SP_LOCKED;
                     break;
                 default:
                     Log.e(TAG,"mapTltContainerState returning undefined: "+ containerState);
-               	    state=TrustletContainerState.UNDEFINED;
+		    state=TrustletContainerState.UNDEFINED;
                     break;
             }
             return state;
@@ -490,17 +472,17 @@ public class ProvisioningService extends BaseService {
                     state=SPContainerState.ACTIVATED;
                     break;
                 case MC_CONT_STATE_ROOT_LOCKED:
-               	    state=SPContainerState.ROOT_LOCKED;
+		    state=SPContainerState.ROOT_LOCKED;
                     break;
                 case MC_CONT_STATE_SP_LOCKED:
-               	    state=SPContainerState.SP_LOCKED;
+		    state=SPContainerState.SP_LOCKED;
                     break;
                 case MC_CONT_STATE_ROOT_SP_LOCKED:
-               	    state=SPContainerState.ROOT_SP_LOCKED;
+		    state=SPContainerState.ROOT_SP_LOCKED;
                     break;
                 default:
                     Log.e(TAG,"mapSpContainerState returning undefined: "+ containerState);
-               	    state=SPContainerState.UNDEFINED;
+		    state=SPContainerState.UNDEFINED;
                     break;
             }
             return state;

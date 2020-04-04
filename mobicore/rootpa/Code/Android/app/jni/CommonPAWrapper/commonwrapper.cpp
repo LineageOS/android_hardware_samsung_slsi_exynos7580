@@ -1,33 +1,33 @@
 /*
- * Copyright (c) 2013 TRUSTONIC LIMITED
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the TRUSTONIC LIMITED nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+Copyright  © Trustonic Limited 2013
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+
+  3. Neither the name of the Trustonic Limited nor the names of its contributors
+     may be used to endorse or promote products derived from this software
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 #include <string.h>
 
 #include "com_gd_mobicore_pa_jni_CommonPAWrapper.h"
@@ -45,8 +45,8 @@
 JavaVM* jvmP_ = NULL;
 const jint VERSION=JNI_VERSION_1_2;
 
-/* Original params list : (JavaVM* jvm, void* reserved)*/
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* jvm, void*)
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* jvm, void* reserved)
 {
 // remember JVM pointer:
 	jvmP_ = jvm;
@@ -64,9 +64,8 @@ JNIEXPORT void JNICALL Java_com_gd_mobicore_pa_jni_CommonPAWrapper_closeSession(
     closeSessionToCmtl();
 }
 
-/* Original params list : (JNIEnv* env, jobject, jint uid, jobject inCommands, jobject outResults)*/
 JNIEXPORT jint JNICALL Java_com_gd_mobicore_pa_jni_CommonPAWrapper_executeCmpCommands
-  (JNIEnv* env, jobject, jint, jobject inCommands, jobject outResults)
+  (JNIEnv* env, jobject, jint uid, jobject inCommands, jobject outResults)
 {
     LOGD(">>Java_com_gd_mobicore_pa_jni_CommonPAWrapper_executeCmpCommands\n");
     int ret=ROOTPA_OK;
@@ -344,7 +343,7 @@ void stateUpdateCallback(ProvisioningState state, rootpaerror_t error, tltInfo_t
         }
         else
         {
-	        envP->CallVoidMethod(obj_, provisioningStateCallback_, ERROR_STATE, ROOTPA_ERROR_INTERNAL);
+	        envP->CallVoidMethod(obj_, provisioningStateCallback_, ERROR, ROOTPA_ERROR_INTERNAL);
         }
     }
     else
@@ -469,10 +468,7 @@ void copyElement(JNIEnv* envP, char** target, jstring source)
     {
         const char* tmp=envP->GetStringUTFChars(source, NULL);
         *target=(char*)malloc(strlen(tmp)+1);
-        if(*target!=NULL)
-        {
-            strcpy(*target, tmp);
-        }
+        strcpy(*target, tmp);
         envP->ReleaseStringUTFChars(source, tmp);
     }
     else
@@ -542,9 +538,8 @@ rootpaerror_t getSystemInfoCallback(osInfo_t* osSpecificInfoP)
     return ret;
 }
 
-/* Original params list : (JNIEnv* envP, jobject obj, jint uid, jint spid, jbyteArray seAddress)*/
 JNIEXPORT jint JNICALL Java_com_gd_mobicore_pa_jni_CommonPAWrapper_doProvisioning
-  (JNIEnv* envP, jobject obj, jint, jint spid, jbyteArray seAddress)
+  (JNIEnv* envP, jobject obj, jint uid, jint spid, jbyteArray seAddress)
 {
     LOGD(">>Java_com_gd_mobicore_pa_jni_CommonPAWrapper_doProvisioning %ld %ld\n", (long int) stateUpdateCallback, (long int) getSystemInfoCallback);
     setFilesPath(envP, obj);
@@ -665,8 +660,7 @@ char* addTrailingZero(uint8_t* vP, uint32_t length)
     return newVP;
 }
 
-/* Original params list : (JNIEnv* envP, jobject obj, jbyteArray variable_name, jbyteArray value)*/
-JNIEXPORT void JNICALL Java_com_gd_mobicore_pa_jni_CommonPAWrapper_setEnvironmentVariable(JNIEnv* envP, jobject, jbyteArray variable_name, jbyteArray value)
+JNIEXPORT void JNICALL Java_com_gd_mobicore_pa_jni_CommonPAWrapper_setEnvironmentVariable(JNIEnv* envP, jobject obj, jbyteArray variable_name, jbyteArray value)
 {
     LOGD(">>Java_com_gd_mobicore_pa_jni_CommonPAWrapper_setEnvironmentVariable");
     JniHelpers jniHelp(envP);
@@ -715,38 +709,3 @@ JNIEXPORT void JNICALL Java_com_gd_mobicore_pa_jni_CommonPAWrapper_setEnvironmen
     delete[] envValP;
     LOGD("<<Java_com_gd_mobicore_pa_jni_CommonPAWrapper_setEnvironmentVariable");
 }
-
-/* Original params list : (JNIEnv* envP, jobject obj, jint spid, jbyteArray uuid, jbyteArray taBin)*/
-JNIEXPORT jint JNICALL Java_com_gd_mobicore_pa_jni_CommonPAWrapper_storeTA(JNIEnv* envP, jobject, jint spid, jbyteArray uuid, jbyteArray taBin)
-{
-    LOGD(">>Java_com_gd_mobicore_pa_jni_CommonPAWrapper_storeTA");
-    int ret=ROOTPA_OK;
-    JniHelpers jniHelp(envP);
-
-    uint32_t uuidLength=0;
-    uint8_t* uuidP=(uint8_t*) jniHelp.jByteArrayToCByteArray(uuid, &uuidLength);
-
-    if(UUID_LENGTH != uuidLength){
-        LOGD("<<Java_com_gd_mobicore_pa_jni_CommonPAWrapper_storeTA, wrong uuidLength %d, not installing\n", uuidLength);
-        free(uuidP);
-        return ROOTPA_ERROR_ILLEGAL_ARGUMENT;
-    }
-    mcUuid_t mcUuid;
-    memcpy(mcUuid.value, uuidP, UUID_LENGTH);
-    free(uuidP);
-
-    uint32_t taBinLength=0;
-    uint8_t* taBinP=(uint8_t*) jniHelp.jByteArrayToCByteArray(taBin, &taBinLength);
-    if(0==taBinLength){
-        LOGD("<<Java_com_gd_mobicore_pa_jni_CommonPAWrapper_storeTA, no taBin\n", taBinLength);
-        free(taBinP);
-        return ROOTPA_ERROR_ILLEGAL_ARGUMENT;
-    }
-
-    ret=storeTA((mcSpid_t)spid, &mcUuid, taBinP, taBinLength);
-    free(taBinP);
-
-    LOGD("<<Java_com_gd_mobicore_pa_jni_CommonPAWrapper_storeTA %d", ret);
-    return ret;
-}
-

@@ -1,42 +1,39 @@
 /*
- * Copyright (c) 2013 TRUSTONIC LIMITED
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the TRUSTONIC LIMITED nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+Copyright  © Trustonic Limited 2013
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+
+  3. Neither the name of the Trustonic Limited nor the names of its contributors
+     may be used to endorse or promote products derived from this software
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 #include <string.h>
 #include <stdlib.h>
-#include <wrapper.h>
+#include <stdbool.h>
 #include <time.h>
 #include <math.h>
-#ifdef TIZEN
-#include <string.h>
-#endif
 
 #include <curl/curl.h>
 
@@ -63,7 +60,7 @@
 #define HTTP_CODE_HTTP_VERSION          505
 
 #ifdef __DEBUG
-#define NONEXISTENT_TEST_URL "http://10.255.255.253/"
+#define NONEXISTENT_TEST_URL "http://10.255.255.8:9/"
 #endif
 
 #define CERT_PATH_MAX_LEN 256
@@ -71,130 +68,10 @@
 static char certificatePath_[CERT_PATH_MAX_LEN];
 static char certificateFilePath_[CERT_PATH_MAX_LEN];
 static long int SE_CONNECTION_DEFAULT_TIMEOUT=58L; // timeout after 58 seconds
-static int MAX_ATTEMPTS=30; //30x0.3 = 9 seconds
-#ifdef WIN32
-	static const DWORD SLEEPTIME_MS=300; // 0.3 seconds
-#else
-	static const struct timespec SLEEPTIME={0,300*1000*1000}; // 0.3 seconds
-#endif
+static int MAX_ATTEMPTS=30;
+static const struct timespec SLEEPTIME={0,300*1000*1000}; // 0.3 seconds  --> 30x0.3 = 9 seconds
 
 rootpaerror_t httpCommunicate(const char* const inputP, const char** linkP, const char** relP, const char** commandP, httpMethod_t method);
-
-#ifdef WIN32
-
-	char* strcasestr(char const *s, char const *find)
-	{
-		char* pos;
-		char* ret;
-		char* ls=_strdup(s);
-		char* lfind=_strdup(find);
-
-		ls=_strlwr(ls);
-		lfind=_strlwr(lfind);
-		pos = strstr(ls, lfind);
-		ret = pos == NULL ? NULL : (char *)(s + (pos-ls));
-		free(ls);
-		free(lfind);
-		return ret;
-	}
-
-
-#endif
-
-#ifdef TIZEN
-#include <sys/types.h>
-#include <string.h>
-#include <ctype.h>
-/*
- * Find the first occurrence of find in s, ignore case.
- */
-char *
-strcasestr(s, find)
-	const char *s, *find;
-{
-	char c, sc;
-	size_t len;
-
-	if ((c = *find++) != 0) {
-		c = tolower((unsigned char)c);
-		len = strlen(find);
-		do {
-			do {
-				if ((sc = *s++) == 0)
-					return (NULL);
-			} while ((char)tolower((unsigned char)sc) != c);
-		} while (strncasecmp(s, find, len) != 0);
-		s--;
-	}
-	return ((char *)s);
-}
-
-/*
- * Appends src to string dst of size siz (unlike strncat, siz is the
- * full size of dst, not space left).  At most siz-1 characters
- * will be copied.  Always NUL terminates (unless siz <= strlen(dst)).
- * Returns strlen(src) + MIN(siz, strlen(initial dst)).
- * If retval >= siz, truncation occurred.
- */
-size_t
-strlcat(char *dst, const char *src, size_t siz)
-{
-	register char *d = dst;
-	register const char *s = src;
-	register size_t n = siz;
-	size_t dlen;
-
-	/* Find the end of dst and adjust bytes left but don't go past end */
-	while (n-- != 0 && *d != '\0')
-		d++;
-	dlen = d - dst;
-	n = siz - dlen;
-
-	if (n == 0)
-		return(dlen + strlen(s));
-	while (*s != '\0') {
-		if (n != 1) {
-			*d++ = *s;
-			n--;
-		}
-		s++;
-	}
-	*d = '\0';
-
-	return(dlen + (s - src));	/* count does not include NUL */
-}
-
-/*
- * Copy src to string dst of size siz.  At most siz-1 characters
- * will be copied.  Always NUL terminates (unless siz == 0).
- * Returns strlen(src); if retval >= siz, truncation occurred.
- */
-size_t
-strlcpy(char *dst, const char *src, size_t siz)
-{
-	register char *d = dst;
-	register const char *s = src;
-	register size_t n = siz;
-
-	/* Copy as many bytes as will fit */
-	if (n != 0 && --n != 0) {
-		do {
-			if ((*d++ = *s++) == 0)
-				break;
-		} while (--n != 0);
-	}
-
-	/* Not enough room in dst, add NUL and traverse rest of src */
-	if (n == 0) {
-		if (siz != 0)
-			*d = '\0';		/* NUL-terminate dst */
-		while (*s++)
-			;
-	}
-
-	return(s - src - 1);	/* count does not include NUL */
-}
-#endif
 
 rootpaerror_t httpPostAndReceiveCommand(const char* const inputP, const char** linkP, const char** relP, const char** commandP)
 {
@@ -280,7 +157,8 @@ static size_t writeMemoryCallback(void *contents, size_t size, size_t nmemb, voi
 {
     size_t realsize = size * nmemb;
     MemoryStruct* mem = (MemoryStruct *)userp;
-    mem->memoryP = (char*)realloc(mem->memoryP, mem->size + realsize + 1);
+
+    mem->memoryP = realloc(mem->memoryP, mem->size + realsize + 1);
     if (mem->memoryP == NULL) {
         /* out of memory! */
         LOGE("not enough memory (realloc returned NULL)\n");
@@ -299,8 +177,7 @@ int debug_function (CURL * curl_handle, curl_infotype info, char* debugMessageP,
 {
     if(debugMessageP!=NULL && debugMessageSize!=0)
     {
-        char* msgP=(char*)malloc(debugMessageSize+1);
-        if(NULL==msgP)return 0;
+        char* msgP=malloc(debugMessageSize+1);
         memcpy(msgP, debugMessageP, debugMessageSize);
         msgP[debugMessageSize]=0;
         LOGD("curl: %d %s",info, msgP);
@@ -316,7 +193,7 @@ int debug_function (CURL * curl_handle, curl_infotype info, char* debugMessageP,
 
 bool copyHeader(void *contents, size_t length, char** headerP)
 {
-    *headerP = (char *)malloc(length + 1);
+    *headerP = malloc(length + 1);
     if (*headerP == NULL) {
         /* out of memory! */
         LOGE("not enough memory (malloc returned NULL)\n");
@@ -407,42 +284,23 @@ void setCertPath(const char* localPathP, const char* certPathP)
 
     if (certPathP!=NULL && (strlen(certPathP)+1)<CERT_PATH_MAX_LEN)
     {
-#ifdef TIZEN
-        strlcpy(certificatePath_, certPathP, sizeof(certificatePath_));
-#else
-/* Fix coverity */
-//        strncpy(certificatePath_, certPathP, sizeof(certificatePath_));
-        strncpy(certificatePath_, certPathP, sizeof(certificatePath_)-1);
-#endif
+        strcpy(certificatePath_, certPathP);
     }
 
     if (localPathP!=NULL && (strlen(localPathP)+1+sizeof(CECERT_FILENAME))<CERT_PATH_MAX_LEN)
     {
-#ifdef TIZEN
-        strlcpy(certificateFilePath_, localPathP,sizeof(certificateFilePath_));
-        strlcat(certificateFilePath_, "/",sizeof(certificateFilePath_));
-#else
-/* Fix coverity */
-//        strncpy(certificateFilePath_, localPathP,sizeof(certificateFilePath_));
-//        strncat(certificateFilePath_, "/",sizeof(certificateFilePath_));
-        strncpy(certificateFilePath_, localPathP,sizeof(certificateFilePath_)-1);
-        strncat(certificateFilePath_, "/",strlen("/"));
-#endif
+        strcpy(certificateFilePath_, localPathP);
+        strcat(certificateFilePath_, "/");
     }
-#ifdef TIZEN
-    strlcat(certificateFilePath_, CECERT_FILENAME,sizeof(certificateFilePath_));
-#else
-//    strncat(certificateFilePath_, CECERT_FILENAME,sizeof(certificateFilePath_));
-    strncat(certificateFilePath_, CECERT_FILENAME,strlen(CECERT_FILENAME));
-#endif
+    strcat(certificateFilePath_, CECERT_FILENAME);
 }
 //
 // TODO-refactor: saveCertFile is duplicate from saveFile in xmlMessageHandler.c, move these to common place
 //
 void saveCertFile(char* filePath, char* fileContent)
 {
-    FILE* fh;
     LOGD(">>saveCertFile %s", filePath);
+    FILE* fh;
     if ((fh = fopen(filePath, "w")) != NULL) // recreating the file every time, this is not the most efficient way, but ensures
 	{                                        // the file is updated in case rootpa and the required content is updated
         fprintf(fh, "%s", fileContent);
@@ -457,8 +315,6 @@ void saveCertFile(char* filePath, char* fileContent)
 
 bool setBasicOpt(CURL* curl_handle, MemoryStruct* chunkP, HeaderStruct* headerChunkP, const char* linkP,  struct curl_slist* headerListP)
 {
-    long int se_connection_timeout=SE_CONNECTION_DEFAULT_TIMEOUT;
-
     if(curl_easy_setopt(curl_handle, CURLOPT_URL, linkP)!=CURLE_OK)
     {
         LOGE("curl_easy_setopt CURLOPT_URL failed");
@@ -528,6 +384,7 @@ bool setBasicOpt(CURL* curl_handle, MemoryStruct* chunkP, HeaderStruct* headerCh
         return false;
     }
 
+    long int se_connection_timeout=SE_CONNECTION_DEFAULT_TIMEOUT;
 #ifdef __DEBUG
     curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);
     curl_easy_setopt(curl_handle, CURLOPT_DEBUGFUNCTION, debug_function);
@@ -563,7 +420,6 @@ bool setBasicOpt(CURL* curl_handle, MemoryStruct* chunkP, HeaderStruct* headerCh
 
 bool setPutOpt(CURL* curl_handle, ResponseStruct* responseChunk)
 {
-    long chunkSize=responseChunk->size;
     LOGD(">>setPutOpt");
     if (curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, readResponseCallback)!=CURLE_OK)
     {
@@ -589,8 +445,8 @@ bool setPutOpt(CURL* curl_handle, ResponseStruct* responseChunk)
         return false;
     }
 
-
-    if (curl_easy_setopt(curl_handle, CURLOPT_INFILESIZE, chunkSize)!=CURLE_OK)
+    long s=responseChunk->size;
+    if (curl_easy_setopt(curl_handle, CURLOPT_INFILESIZE, s)!=CURLE_OK)
     {
         LOGE("curl_easy_setopt CURLOPT_INFILESIZE_LARGE failed");
         return false;
@@ -631,7 +487,6 @@ bool setPostOpt(CURL* curl_handle, const char* inputP)
 
 bool setDeleteOpt(CURL* curl_handle, const char* inputP)
 {
-	(void) inputP;
     LOGD(">>setDeleteOpt %s", inputP);
     if (curl_easy_setopt(curl_handle, CURLOPT_CUSTOMREQUEST, "DELETE")!=CURLE_OK)
     {
@@ -684,14 +539,6 @@ rootpaerror_t httpCommunicate(const char * const inputP, const char** linkP, con
     time_t endtime=0;
     int timediff=0;
 
-    ResponseStruct responseChunk;
-    MemoryStruct chunk;
-    HeaderStruct headerChunk;
-    headerChunk.linkSize = 0;
-    headerChunk.relSize = 0;
-    headerChunk.linkP = NULL;
-    headerChunk.relP = NULL;
-
     LOGD(">>httpCommunicate");
     if(NULL==linkP || NULL==relP || NULL==commandP || NULL==*linkP)
     {
@@ -701,8 +548,17 @@ rootpaerror_t httpCommunicate(const char * const inputP, const char** linkP, con
     *commandP=NULL;
     *relP=NULL;
 
+    ResponseStruct responseChunk;
+
+    HeaderStruct headerChunk;
+    headerChunk.linkSize = 0;
+    headerChunk.relSize = 0;
+    headerChunk.linkP = NULL;
+    headerChunk.relP = NULL;
+
+    MemoryStruct chunk;
     chunk.size = 0;    /* no data at this point */
-    chunk.memoryP = (char *)malloc(1);  /* will be grown as needed by the realloc above */
+    chunk.memoryP = malloc(1);  /* will be grown as needed by the realloc above */
     if(NULL==chunk.memoryP)
     {
         return ROOTPA_ERROR_OUT_OF_MEMORY;
@@ -770,11 +626,7 @@ rootpaerror_t httpCommunicate(const char * const inputP, const char** linkP, con
         curlRet=curl_easy_perform(curl_handle_);
         LOGD("curl_easy_perform %ld %d", curlRet, attempts );
         if(CURLE_OK==curlRet) break;
-#ifdef WIN32
-		Sleep(SLEEPTIME_MS);
-#else
         nanosleep(&SLEEPTIME,NULL);
-#endif
         endtime=time(NULL);
         timediff=(int)ceil(difftime(endtime, begintime));
         LOGD("timediff (ceil) %d", timediff);
@@ -858,4 +710,3 @@ rootpaerror_t httpCommunicate(const char * const inputP, const char** linkP, con
     LOGD("<<httpCommunicate %d %ld %ld", (int) ret, (long int) http_code, (long int) curlRet);
     return ret;
 }
-
