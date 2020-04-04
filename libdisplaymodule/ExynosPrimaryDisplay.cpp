@@ -18,7 +18,7 @@ ExynosPrimaryDisplay::~ExynosPrimaryDisplay()
 {
 }
 
-int ExynosPrimaryDisplay::getDeconWinMap(int overlayIndex, int totalOverlays)
+int ExynosPrimaryDisplay::getDeconWinMap(int overlayIndex __unused, int totalOverlays __unused)
 {
 	return 0;
 }
@@ -37,7 +37,7 @@ int ExynosPrimaryDisplay::getRGBMPPIndex(int index)
     return index;
 }
 
-bool ExynosPrimaryDisplay::isOverlaySupported(hwc_layer_1_t &layer, size_t index, bool useVPPOverlay,
+bool ExynosPrimaryDisplay::isOverlaySupported(hwc_layer_1_t &layer, size_t index, bool useVPPOverlay  __unused,
         ExynosMPPModule** supportedInternalMPP, ExynosMPPModule** supportedExternalMPP)
 {
     // Exynos755555oesn't have any VPP Overlays
