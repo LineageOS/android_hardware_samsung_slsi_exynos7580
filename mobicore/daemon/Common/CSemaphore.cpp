@@ -72,7 +72,7 @@ bool CSemaphore::wait(int sec)
     int rc = 0;
     struct timespec tm;
     if (sec < 0)
-        sec = LONG_MAX;
+        sec = INT_MAX;
     clock_gettime(CLOCK_REALTIME, &tm);
     tm.tv_sec += sec;
 
